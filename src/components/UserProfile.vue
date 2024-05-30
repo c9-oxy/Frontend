@@ -1,6 +1,7 @@
-<!-- <script setup>
+<script setup>
 import { onMounted, ref } from 'vue'
 import { useRouter } from 'vue-router'
+import Cookies from 'js-cookie'
 
 const userId = ref('')
 const userNm = ref('')
@@ -9,19 +10,21 @@ const userRk = ref('')
 const router = useRouter()
 
 onMounted(() => {
-  const id = window.localStorage.getItem('userId')
-  const name = window.localStorage.getItem('userName')
-  const rank = window.localStorage.getItem('userRank')
+  userId.value = Cookies.get('userId')
+  userNm.value = Cookies.get('userName')
+  userRk.value = Cookies.get('userRank')
 
-  if (!id && !name && !rank) {
-    // 로그인 정보가 없으면 로그인 페이지로 리다이렉트
+  if (!userId.value) {
     router.push('/signup')
-  } else {
-    userId.value = id
-    userNm.value = name
-    userRk.value = rank
   }
 })
+
+const logout = () => {
+  // 쿠키에서 사용자 정보 삭제
+  Cookies.remove('userId', 'userName', 'userRank')
+  // 로그아웃 후 리다이렉트
+  router.push('/signup')
+}
 </script>
 
 <template>
@@ -56,4 +59,4 @@ onMounted(() => {
     align-items: center;
   }
 }
-</style> -->
+</style>

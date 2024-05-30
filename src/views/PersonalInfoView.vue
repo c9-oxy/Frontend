@@ -1,5 +1,5 @@
 <script setup>
-import PersonalInfo from '../components/User/PersonalInfo.vue'
+import PersonalInfo from '../components/PersonalInfo.vue'
 </script>
 
 <template>
