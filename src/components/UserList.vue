@@ -1,6 +1,6 @@
 <script setup>
 import axios from 'axios'
-import { ref } from 'vue'
+import { onMounted, ref } from 'vue'
 import { useRouter } from 'vue-router'
 
 function getCookie(name) {
@@ -12,34 +12,58 @@ const router = useRouter()
 const id = getCookie('userId')
 const userRk = ref('')
 
-axios
-  .get(`http://localhost:8082/user/${id}`)
-  .then((res) => {
-    userRk.value = res.data.USER_RANK
-  })
-  .catch((err) => {
-    console.error(err)
-  })
+const detailUserId = ref('')
+const detailUserName = ref('')
 
-axios
-  .get('http://localhost:8082/list')
-  .then((res) => {
-    if (res.data) {
-      if (userRk.value != 'A') {
-        router.push('/profile')
+const userCheck = ref(false)
+
+onMounted(() => {
+  axios
+    .get(`http://localhost:8082/user/${id}`)
+    .then((res) => {
+      userRk.value = res.data.USER_RANK
+    })
+    .catch((err) => {
+      console.error(err)
+    })
+
+  axios
+    .get('http://localhost:8082/list')
+    .then((res) => {
+      if (res.data) {
+        console.log(userRk.value)
+        if (userRk.value == 'A') {
+          console.log(userRk.value)
+          router.push('/profile')
+        } else {
+          // alert('관리자 확인되었습니다.')
+          console.log(res.data)
+          userList.value = res.data
+        }
       } else {
-        alert('관리자 확인되었습니다.')
-        console.log(res.data)
-        userList.value = res.data
+        alert('아차...!')
       }
-    } else {
-      alert('아차...!')
-    }
-  })
-  .catch((err) => {
-    console.error(err)
-    alert('게다츠님, 오류가 나셔야죠')
-  })
+    })
+    .catch((err) => {
+      console.error(err)
+      alert('게다츠님, 오류가 나셔야죠')
+    })
+})
+
+function UserDetail(userId) {
+  console.log('요청할 유저 id:' + userId + ', ' + userId.value)
+  axios
+    .get(`http://localhost:8082/user/${userId}`)
+    .then((res) => {
+      userCheck.value = true
+      detailUserId.value = res.data.USER_ID
+      detailUserName.value = res.data.USER_NAME
+      console.log('불러온 유저' + detailUserId.value + ' , ' + res.data.USER_ID)
+    })
+    .catch((err) => {
+      console.error(err)
+    })
+}
 </script>
 
 <template>
@@ -53,6 +77,7 @@ axios
         <td>이름</td>
         <td>등급</td>
         <td>상태</td>
+        <td>상세조회</td>
       </tr>
       <tr v-for="list in userList" :key="list.USER_NO">
         <td>{{ list.USER_NO }}</td>
@@ -60,9 +85,14 @@ axios
         <td>{{ list.USER_NAME }}</td>
         <td>{{ list.USER_RANK }}</td>
         <td>{{ list.USER_ACTIVATION }}</td>
-        <td><router-link to=""></router-link></td>
+        <td><input @click="UserDetail(list.USER_ID)" type="button" value="조회" /></td>
       </tr>
     </table>
+  </div>
+  <div v-if="userCheck">
+    <button>ㅎㅇ</button>
+    <p>{{ detailUserId }}</p>
+    <p>{{ detailUserName }}</p>
   </div>
 </template>
 

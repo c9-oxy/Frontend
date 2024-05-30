@@ -1,6 +1,9 @@
 <script setup>
 import { RouterLink, RouterView } from 'vue-router'
 import HelloWorld from './components/HelloWorld.vue'
+import { ref } from 'vue'
+
+const test = ref(true)
 </script>
 
 <template>
@@ -16,7 +19,9 @@ import HelloWorld from './components/HelloWorld.vue'
         <RouterLink to="/signup">SignUp</RouterLink>
         <RouterLink to="/signin">SignIn</RouterLink>
         <RouterLink to="/profile">프로필</RouterLink>
-        <RouterLink to="/user-list">조회</RouterLink>
+        <div v-if="test" >
+          <RouterLink to="/list">조회</RouterLink>
+        </div>
       </nav>
     </div>
   </header>

@@ -19,18 +19,17 @@ const updateNameForm = () => {
   }
 
   axios
-    // .put('http://localhost:8082/user', updateName)
-    .put('http://localhost:8082/user', updateName)
+    .put('http://localhost:8082/user', updateName) //
     .then((res) => {
       alert('수정되었습니다')
-      Cookies.set('userName', res.data.USER_NAME, { expires: 7, path: '' })
-      Cookies.set('userRank', res.data.USER_RANK, { expires: 7, path: '' })
+      Cookies.set('userName', userNm.value, { expires: 7, path: '' })
+      Cookies.set('userRank', userRk.value, { expires: 7, path: '' })
       router.push('/profile')
     })
     .catch((err) => {
       console.log('2')
       console.error(err)
-      console.log(updateName, '실빼애애앳!!!!') 
+      console.log(updateName, '실빼애애앳!!!!')
     })
 }
 </script>
