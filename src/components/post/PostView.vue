@@ -7,10 +7,14 @@ import { onMounted, ref } from 'vue'
 const currUrl = ref('')
 
 const isPost = ref(true)
-const postContent = ref('')
 const boardId = ref('')
 const postNo = ref('')
 const boardName = ref('')
+
+const postTitle = ref('')
+const postContent = ref('')
+const postAuthor = ref('')
+const postTime = ref('')
 
 onMounted(() => {
   currUrl.value = window.location.href //먼저 자신의 현재 url을 가져옵니다.
@@ -22,16 +26,18 @@ onMounted(() => {
 
   if (postNo.value != null) {
     axios
-      .get(`http://localhost:8082/view/${boardId.value}/${postNo.value}`) //id 파라미터를 매개로 post들을 검색한다.
+      .get(`http://localhost:8082/board/view/${boardId.value}/${postNo.value}`) //id 파라미터를 매개로 post들을 검색한다.
       .then((res) => {
-        console.log(res.data)
         if (Object.keys(res.data).length === 0) {
           isPost.value = false
           alert('글이 존재하지 않습니다.')
           //   router.push('/board')
         } else {
           isPost.value = true
-          postContent.value = res.data
+          postTitle.value = res.data.POST_TITLE
+          postContent.value = res.data.POST_CONTENT
+          postAuthor.value = res.data.POST_AUTHOR
+          postTime.value = res.data.POST_TIME
         }
       })
       .catch((err) => {
@@ -58,8 +64,20 @@ onMounted(() => {
     <br />
     <div v-if="isPost" class="post">
       <article>
-        <div class="title"></div>
-        <div class="content"></div>
+        <header>
+          <div class="title">
+            {{ postTitle }}
+          </div>
+          <div class="author">
+            {{ postAuthor }}
+          </div>
+          <div class="time">
+            {{ postTime }}
+          </div>
+        </header>
+        <div class="content">
+          {{ postContent }}
+        </div>
         <div class="comments"></div>
       </article>
     </div>

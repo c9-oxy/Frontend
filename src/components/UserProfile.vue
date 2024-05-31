@@ -25,11 +25,15 @@ const logout = () => {
   // 로그아웃 후 리다이렉트
   router.push('/signup')
 }
+
+function myPosts() {
+  router.push('/profile/post')
+}
 </script>
 
 <template>
   <div class="personal-info">
-    <h1>마이페이지</h1>
+    <h1>프로필</h1>
     <br />
     <h3>나의정보</h3>
     <hr />
@@ -44,6 +48,8 @@ const logout = () => {
     <h3 style="display: inline">{{ userRk }}</h3>
     <br /><br /><br /><br /><br />
     <router-link to="/personal-info">내 정보 수정</router-link> <br /><br />
+
+    <button @click="myPosts()">내가 쓴 글 보기</button>
 
     <button @click="logout">로그아웃</button>
 

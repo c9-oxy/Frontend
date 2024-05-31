@@ -33,6 +33,11 @@ const router = createRouter({
       component: () => import('../views/ProfileView.vue')
     },
     {
+      path: '/profile/post',
+      name: 'myPosts',
+      component: () => import('../views/MyPostsView.vue')
+    },
+    {
       path: '/personal-info',
       name: 'personal-info',
       component: () => import('../views/PersonalInfoView.vue')
@@ -48,14 +53,19 @@ const router = createRouter({
       component: () => import('../views/BoardSearch.vue')
     },
     {
-      path: '/post',
+      path: '/board/post',
       name: 'postList',
       component: () => import('../views/PostListView.vue')
     },
     {
-      path: '/view',
+      path: '/board/view',
       name: 'postView',
       component: () => import('../views/PostViewView.vue')
+    },
+    {
+      path: '/board/write',
+      name: 'postWrite',
+      component: () => import('../views/PostWriteView.vue')
     }
   ]
 })

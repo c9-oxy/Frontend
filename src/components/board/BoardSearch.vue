@@ -46,7 +46,7 @@ const searchBoard = () => {
     <table v-if="isResult">
       <tr v-for="result in searchResult" :key="result.BOARD_NO">
         <td>
-          <router-link :to="`/post/?id=${result.BOARD_ID}`"
+          <router-link :to="`/board/post/?id=${result.BOARD_ID}`"
             >{{ result.BOARD_NAME }} 게시판</router-link
           >
         </td>
