@@ -41,6 +41,21 @@ const router = createRouter({
       path: '/list',
       name: 'list',
       component: () => import('../views/UserListView.vue')
+    },
+    {
+      path: '/board',
+      name: 'board',
+      component: () => import('../views/BoardSearch.vue')
+    },
+    {
+      path: '/post',
+      name: 'postList',
+      component: () => import('../views/PostListView.vue')
+    },
+    {
+      path: '/view',
+      name: 'postView',
+      component: () => import('../views/PostViewView.vue')
     }
   ]
 })

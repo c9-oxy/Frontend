@@ -18,8 +18,9 @@ const test = ref(true)
         <RouterLink to="/about">About</RouterLink>
         <RouterLink to="/signup">SignUp</RouterLink>
         <RouterLink to="/signin">SignIn</RouterLink>
+        <RouterLink to="/board">커뮤니티</RouterLink>
         <RouterLink to="/profile">프로필</RouterLink>
-        <div v-if="test" >
+        <div v-if="test">
           <RouterLink to="/list">조회</RouterLink>
         </div>
       </nav>

@@ -28,7 +28,7 @@ onMounted(() => {
     })
 
   axios
-    .get('http://localhost:8082/list')
+    .get('http://localhost:8082/list') //유저 리스트 조회
     .then((res) => {
       if (res.data) {
         console.log(userRk.value)
@@ -37,7 +37,7 @@ onMounted(() => {
           router.push('/profile')
         } else {
           // alert('관리자 확인되었습니다.')
-          console.log(res.data)
+          console.log(res.data) //관리자임이 확인될 경우 userList 변수에 받아온 데이터를 삽입합니다.
           userList.value = res.data
         }
       } else {
@@ -51,6 +51,7 @@ onMounted(() => {
 })
 
 function UserDetail(userId) {
+  //유저 상세정보 조회
   console.log('요청할 유저 id:' + userId + ', ' + userId.value)
   axios
     .get(`http://localhost:8082/user/${userId}`)
