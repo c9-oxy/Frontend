@@ -3,6 +3,7 @@ import axios from 'axios'
 import { onMounted, ref } from 'vue'
 import Cookies from 'js-cookie'
 import { useRouter } from 'vue-router'
+import BoardHeader from '../board/BoardHeader.vue'
 
 const router = useRouter()
 const currUrl = ref('')
@@ -14,29 +15,36 @@ const userId = ref(Cookies.get('userId'))
 
 onMounted(() => {
   currUrl.value = window.location.href //먼저 자신의 현재 url을 가져옵니다.
-  const url = new URL(currUrl.value) //이걸 url로 선언합니다.
-  const urlParams = url.searchParams //그리고 그 url의 전체 파라미터 값을 가져옵니다.
-  boardId.value = urlParams.get('id') //그 리고 거기서 'id' 파라미터를 찾습니다.
+  const parts = currUrl.value.split('/')
+  boardId.value = parts[4] //그 리고 거기서 'id' 파라미터를 찾습니다.
 })
 
 function submitPost() {
-  const newPost = {
-    userId: userId.value,
-    boardId: boardId.value,
-    postTitle: postTitle.value,
-    postContent: postContent.value
-  }
+  if (postTitle.value.trim() != '' && postContent.value.trim() != '') {
+    const newPost = {
+      userId: userId.value,
+      boardId: boardId.value,
+      postTitle: postTitle.value,
+      postContent: postContent.value
+    }
 
-  if (boardId.value != null) {
-    axios
-      .post('http://localhost:8082/board/write', newPost) //id 파라미터를 매개로 post들을 검색한다.
-      .then((res) => {
-        router.push(`/board/post/?id=${boardId.value}`)
-      })
-      .catch((err) => {
-        console.error(err) //이건 진짜 에러
-        alert('글 작성이 정상적으로 처리되지 않았습니다. ' + err.data + '관리자에게 문의 바랍니다.')
-      })
+    if (boardId.value != null) {
+      axios
+        .post('http://localhost:8082/posts', newPost) //id 파라미터를 매개로 post들을 검색한다.
+        .then((res) => {
+          router.push({ name: 'postList', params: { id: boardId.value } })
+        })
+        .catch((err) => {
+          console.error(err) //이건 진짜 에러
+          alert(
+            '글 작성이 정상적으로 처리되지 않았습니다. ' + err.data + '관리자에게 문의 바랍니다.'
+          )
+        })
+    }
+  } else if (postTitle.value.trim() == '') {
+    alert('제목을 입력하세요.')
+  } else if (postContent.value.trim() == '') {
+    alert('내용을 입력하세요.')
   }
 }
 </script>
@@ -45,6 +53,12 @@ function submitPost() {
   <!-- <div v-for="post in postList" :key="post.POST_NO" id="title">
     <h1>{{ post.BOARD_NAME }} 게시판</h1>
   </div> -->
+  <header>
+    <router-link :to="{ name: 'postList', params: { id: boardId.value } }"
+      ><board-header msg> </board-header>
+      <h2>게시판</h2></router-link
+    >
+  </header>
   <article class="write_wrap">
     <div class="posts">
       <form>

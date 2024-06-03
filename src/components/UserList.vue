@@ -91,9 +91,11 @@ function UserDetail(userId) {
     </table>
   </div>
   <div v-if="userCheck">
-    <button>ㅎㅇ</button>
     <p>{{ detailUserId }}</p>
     <p>{{ detailUserName }}</p>
+    <button type="button" style="display: inline">수정</button>
+
+    <button type="button" style="display: inline">삭제</button>
   </div>
 </template>
 

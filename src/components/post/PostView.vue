@@ -1,6 +1,8 @@
 <script setup>
 import axios from 'axios'
 import { onMounted, ref } from 'vue'
+import BoardHeader from '../board/BoardHeader.vue'
+
 // import { useRouter } from 'vue-router'
 
 // const router = useRouter()
@@ -18,15 +20,13 @@ const postTime = ref('')
 
 onMounted(() => {
   currUrl.value = window.location.href //먼저 자신의 현재 url을 가져옵니다.
-  const url = new URL(currUrl.value) //이걸 url로 선언합니다.
-  const urlParams = url.searchParams //그리고 그 url의 전체 파라미터 값을 가져옵니다.
-  boardId.value = urlParams.get('id') //그리고 거기서 'id' 파라미터와, 'no' 파라미터를 찾습니다.
-  postNo.value = urlParams.get('no') //id는 게시판 id, no는 글 번호를 의미합니다.
-  console.log(postNo)
+  const parts = currUrl.value.split('/')
+  boardId.value = parts[4] //그 리고 거기서 'id' 파라미터를 찾습니다.
+  postNo.value = parts[5] //id는 게시판 id, no는 글 번호를 의미합니다.
 
   if (postNo.value != null) {
     axios
-      .get(`http://localhost:8082/board/view/${boardId.value}/${postNo.value}`) //id 파라미터를 매개로 post들을 검색한다.
+      .get(`http://localhost:8082/posts/${boardId.value}/${postNo.value}`) //id 파라미터를 매개로 post들을 검색한다.
       .then((res) => {
         if (Object.keys(res.data).length === 0) {
           isPost.value = false
@@ -58,6 +58,12 @@ onMounted(() => {
       <button type="submit">검색</button>
     </form> -->
   </div>
+  <header>
+    <router-link :to="{ name: 'postList', params: { id: boardId.value } }"
+      ><board-header msg> </board-header>
+      <h2>게시판</h2></router-link
+    >
+  </header>
   <div class="posts">
     <h3>내용</h3>
     <span v-if="!isPost">글이 없습니다.</span>

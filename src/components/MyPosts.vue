@@ -57,9 +57,10 @@ onMounted(() => {
         <tr v-for="post in postList" :key="post.POST_NO">
           <td>{{ post.BOARD_NAME }}</td>
           <td>
-            <router-link :to="`/board/view/?id=${post.BOARD_ID}&no=${post.POST_NO}`">{{
-              post.POST_TITLE
-            }}</router-link>
+            <router-link
+              :to="{ name: 'postView', params: { id: post.BOARD_ID, no: post.POST_NO } }"
+              >{{ post.POST_TITLE }}</router-link
+            >
           </td>
           <td>{{ post.POST_AUTHOR }}</td>
           <td>{{ post.POST_TIME }}</td>

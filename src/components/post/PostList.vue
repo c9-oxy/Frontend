@@ -2,25 +2,25 @@
 import axios from 'axios'
 import { onMounted, ref } from 'vue'
 import { useRouter } from 'vue-router'
+import BoardHeader from '../board/BoardHeader.vue'
 
 const router = useRouter()
+
 const currUrl = ref('')
 
 const isPost = ref(true)
 const postList = ref([])
 const boardId = ref('')
-const boardName = ref('')
 
 onMounted(() => {
   currUrl.value = window.location.href //먼저 자신의 현재 url을 가져옵니다.
-  const url = new URL(currUrl.value) //이걸 url로 선언합니다.
-  const urlParams = url.searchParams //그리고 그 url의 전체 파라미터 값을 가져옵니다.
-  boardId.value = urlParams.get('id') //그 리고 거기서 'id' 파라미터를 찾습니다.
+  const parts = currUrl.value.split('/')
+  boardId.value = parts[4] //그 리고 거기서 'id' 파라미터를 찾습니다.
+
   if (boardId.value != null) {
     axios
-      .get(`http://localhost:8082/board/post/${boardId.value}`) //id 파라미터를 매개로 post들을 검색한다.
+      .get(`http://localhost:8082/posts/${boardId.value}`) //id 파라미터를 매개로 post들을 검색한다.
       .then((res) => {
-        console.log(res.data)
         if (Object.keys(res.data).length === 0) {
           isPost.value = false
           //   router.push('/board')
@@ -37,7 +37,7 @@ onMounted(() => {
 })
 
 function routeWrite(boardId) {
-  router.push(`/board/write/?id=${boardId}`)
+  router.push({ name: 'postWrite', params: { id: boardId.value } })
 }
 </script>
 
@@ -51,8 +51,15 @@ function routeWrite(boardId) {
       <button type="submit">검색</button>
     </form> -->
   </div>
+  <header>
+    <router-link :to="{ name: 'postList', params: { id: boardId.value } }"
+      ><board-header msg> </board-header>
+      <h2>게시판</h2></router-link
+    >
+  </header>
   <div class="posts">
-    <h3>전체 글 보기</h3>
+    <h4>전체 글 보기</h4>
+    <!-- <h1>{{ $route.params.id }}</h1> -->
     <button @click="routeWrite(boardId)">글쓰기</button><br />
     <span v-if="!isPost">글이 없습니다.</span>
     <br />
@@ -67,9 +74,13 @@ function routeWrite(boardId) {
         <tr v-for="post in postList" :key="post.POST_NO">
           <td>{{ post.POST_NO }}</td>
           <td>
-            <router-link :to="`/board/view/?id=${post.BOARD_ID}&no=${post.POST_NO}`">{{
+            <!-- <router-link :to="`/board/view/?id=${post.BOARD_ID}&no=${post.POST_NO}`">{{
               post.POST_TITLE
-            }}</router-link>
+            }}</router-link> -->
+            <router-link
+              :to="{ name: 'postView', params: { id: post.BOARD_ID, no: post.POST_NO } }"
+              >{{ post.POST_TITLE }}</router-link
+            >
           </td>
           <td>{{ post.POST_AUTHOR }}</td>
           <td>{{ post.POST_TIME }}</td>
