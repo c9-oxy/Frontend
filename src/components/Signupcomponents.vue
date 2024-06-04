@@ -187,7 +187,7 @@ watch([PW, PWPW], ([valuePW, valuePWPW]) => {
   </div>
 </template>
 
-<style>
+<style scoped>
 span {
   color: red;
 }

@@ -64,7 +64,7 @@ function submitPost() {
       <form>
         <input :value="userId" type="text" readonly /><br />
         <input v-model="postTitle" class="title" type="text" placeholder="제목을 입력해 주세요." />
-        <input v-model="postContent" class="tx-canvas" type="text" />
+        <input v-model="postContent" class="content" type="text" />
         <button @click="submitPost()" type="button">등록</button>
       </form>
     </div>

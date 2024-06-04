@@ -2,21 +2,25 @@
 import axios from 'axios'
 import { onMounted, ref } from 'vue'
 import BoardHeader from '../board/BoardHeader.vue'
+import PostComment from './PostComment.vue'
+import dayjs from 'dayjs'
+import router from '@/router'
+import Cookies from 'js-cookie'
 
-// import { useRouter } from 'vue-router'
-
-// const router = useRouter()
 const currUrl = ref('')
+const userId = Cookies.get('userId')
 
 const isPost = ref(true)
 const boardId = ref('')
 const postNo = ref('')
-const boardName = ref('')
 
 const postTitle = ref('')
 const postContent = ref('')
 const postAuthor = ref('')
 const postTime = ref('')
+const postEDITTIME = ref('')
+const postEDITS = ref('')
+const postCommentsCount = ref('')
 
 onMounted(() => {
   currUrl.value = window.location.href //먼저 자신의 현재 url을 가져옵니다.
@@ -29,6 +33,7 @@ onMounted(() => {
       .get(`http://localhost:8082/posts/${boardId.value}/${postNo.value}`) //id 파라미터를 매개로 post들을 검색한다.
       .then((res) => {
         if (Object.keys(res.data).length === 0) {
+          console.log(res.data)
           isPost.value = false
           alert('글이 존재하지 않습니다.')
           //   router.push('/board')
@@ -38,6 +43,9 @@ onMounted(() => {
           postContent.value = res.data.POST_CONTENT
           postAuthor.value = res.data.POST_AUTHOR
           postTime.value = res.data.POST_TIME
+          // postCommentsCount.value = res.data.TOTAL
+          postEDITTIME.value = res.data.POST_EDIT_TIME
+          postEDITS.value = res.data.POST_EDITS
         }
       })
       .catch((err) => {
@@ -46,6 +54,27 @@ onMounted(() => {
       })
   }
 })
+
+const formatDate = (dateString) => {
+  return dayjs(dateString).format('YYYY-MM-DD : HH:mm:ss')
+}
+
+const deletePost = () => {
+  axios
+    .delete(`http://localhost:8082/posts/${postNo.value}`)
+    .then(() => {
+      alert('게시글이 성공적으로 삭제되었습니다.')
+      router.push(`/board`)
+    })
+    .catch((error) => {
+      console.error('게시글을 삭제하는 데 실패했습니다:', error)
+      alert('게시글 삭제에 실패했습니다.')
+    })
+}
+
+const clickupdatepush = () => {
+  router.push({ name: 'postUpdate', params: { no: postNo.value } })
+}
 </script>
 
 <template>
@@ -65,26 +94,45 @@ onMounted(() => {
     >
   </header>
   <div class="posts">
-    <h3>내용</h3>
     <span v-if="!isPost">글이 없습니다.</span>
     <br />
     <div v-if="isPost" class="post">
       <article>
         <header>
           <div class="title">
-            {{ postTitle }}
+            &nbsp;
+            <p style="font-weight: 500; display: inline">{{ postTitle }}</p>
           </div>
-          <div class="author">
+          <div class="author" style="display: inline">
+            &nbsp;
             {{ postAuthor }}
           </div>
-          <div class="time">
-            {{ postTime }}
+          <div class="time" style="display: inline">
+            &nbsp;
+            {{ formatDate(postTime) }}
           </div>
+          <div v-if="postEDITS == 'Y'" style="display: inline">
+            &nbsp;수정시각:
+            {{ formatDate(postEDITTIME) }}
+          </div>
+          <div v-if="postAuthor == userId">
+            <button @click="clickupdatepush">수정하기</button>
+            <button @click="deletePost">삭제</button>
+          </div>
+          <hr />
         </header>
+        <br />
         <div class="content">
           {{ postContent }}
         </div>
-        <div class="comments"></div>
+        <br /><br />
+        <hr />
+        <div class="comments">
+          <p style="display: inline">전체 댓글</p>
+          <!-- <p style="display: inline; color: red">{{ postCommentsCount }}</p> -->
+          <p style="display: inline">개</p>
+          <post-comment></post-comment>
+        </div>
       </article>
     </div>
   </div>

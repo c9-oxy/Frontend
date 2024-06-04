@@ -3,6 +3,7 @@ import axios from 'axios'
 import { onMounted, ref } from 'vue'
 import { useRouter } from 'vue-router'
 import BoardHeader from '../board/BoardHeader.vue'
+import dayjs from 'dayjs'
 
 const router = useRouter()
 
@@ -35,6 +36,10 @@ onMounted(() => {
       })
   }
 })
+
+const formatDate = (dateString) => {
+  return dayjs(dateString).format('YYYY-MM-DD : HH:mm:ss')
+}
 
 function routeWrite(boardId) {
   router.push({ name: 'postWrite', params: { id: boardId.value } })
@@ -70,6 +75,7 @@ function routeWrite(boardId) {
           <td>제목</td>
           <td>작성자</td>
           <td>작성시간</td>
+          
         </tr>
         <tr v-for="post in postList" :key="post.POST_NO">
           <td>{{ post.POST_NO }}</td>
@@ -83,14 +89,15 @@ function routeWrite(boardId) {
             >
           </td>
           <td>{{ post.POST_AUTHOR }}</td>
-          <td>{{ post.POST_TIME }}</td>
+          <td>{{ formatDate(post.POST_TIME) }}</td>
+          <td style="color: red">[{{ post.TOTAL }}]</td>
         </tr>
       </div>
     </table>
   </div>
 </template>
 
-<style>
+<style scope>
 @media (min-width: 1024px) {
   .signup {
     min-height: 100vh;
