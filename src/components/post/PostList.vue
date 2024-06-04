@@ -75,7 +75,6 @@ function routeWrite(boardId) {
           <td>제목</td>
           <td>작성자</td>
           <td>작성시간</td>
-          
         </tr>
         <tr v-for="post in postList" :key="post.POST_NO">
           <td>{{ post.POST_NO }}</td>
@@ -90,7 +89,7 @@ function routeWrite(boardId) {
           </td>
           <td>{{ post.POST_AUTHOR }}</td>
           <td>{{ formatDate(post.POST_TIME) }}</td>
-          <td style="color: red">[{{ post.TOTAL }}]</td>
+          <td v-if="post.TOTAL > 0" style="color: red">[{{ post.TOTAL }}]</td>
         </tr>
       </div>
     </table>
