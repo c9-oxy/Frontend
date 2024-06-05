@@ -14,7 +14,6 @@ onMounted(() => {
   currUrl.value = window.location.href //먼저 자신의 현재 url을 가져옵니다.
   const parts = currUrl.value.split('/')
   postNo.value = parts[4] //그 리고 거기서 'id' 파라미터를 찾습니다.
-  console.log(postNo.value)
 })
 
 const updatePost = () => {

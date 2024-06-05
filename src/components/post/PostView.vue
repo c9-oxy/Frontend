@@ -20,8 +20,7 @@ const postAuthor = ref('')
 const postTime = ref('')
 const postEDITTIME = ref('')
 const postEDITS = ref('')
-const postCommentsCount = ref('')
-
+ 
 onMounted(() => {
   currUrl.value = window.location.href //먼저 자신의 현재 url을 가져옵니다.
   const parts = currUrl.value.split('/')
@@ -72,7 +71,7 @@ const deletePost = () => {
     })
 }
 
-const clickupdatepush = () => {
+const clickupdatepush = () => {   
   router.push({ name: 'postUpdate', params: { no: postNo.value } })
 }
 </script>

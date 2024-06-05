@@ -4,7 +4,6 @@ import { onMounted, ref } from 'vue'
 import Cookies from 'js-cookie'
 import { useRouter } from 'vue-router'
 import BoardHeader from '../board/BoardHeader.vue'
-import PostTags from './PostTags.vue'
 
 const router = useRouter()
 const currUrl = ref('')
@@ -13,6 +12,8 @@ const boardId = ref('')
 const postTitle = ref('')
 const postContent = ref('')
 const userId = ref(Cookies.get('userId'))
+
+const isTags = ref(false)
 
 onMounted(() => {
   currUrl.value = window.location.href //먼저 자신의 현재 url을 가져옵니다.
@@ -54,30 +55,11 @@ function submitPost() {
   <!-- <div v-for="post in postList" :key="post.POST_NO" id="title">
     <h1>{{ post.BOARD_NAME }} 게시판</h1>
   </div> -->
-  <header>
-    <router-link :to="{ name: 'postList', params: { id: boardId.value } }"
-      ><board-header msg> </board-header>
-      <h2>게시판</h2></router-link
-    >
-  </header>
   <article class="write_wrap">
     <div class="posts">
       <form>
-        <input :value="userId" type="text" readonly /><br />
-        <input
-          v-model="postTitle"
-          class="title"
-          type="text"
-          placeholder="제목을 입력해 주세요."
-        /><br />
-        <input
-          v-model="postContent"
-          style="width: 300px; height: 300px"
-          class="content"
-          type="text"
-        />
-        <post-tags></post-tags>
-        <button @click="submitPost()" type="button">등록</button> 
+        <div v-if="isTags"></div>
+        <input v-model="postTitle" class="title" type="text" placeholder="태그를 입력해 주세요." />
       </form>
     </div>
   </article>
