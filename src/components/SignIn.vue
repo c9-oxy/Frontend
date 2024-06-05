@@ -21,6 +21,7 @@ const checkId = () => {
       .then((res) => {
         if (res.data) {
           if (res.data.USER_COUNT > 0) {
+            //USER_FAILED로 변경
             alert('비밀번호를 잘못 입력했습니다.\n입력하신 내용을 다시 확인해주세요.')
           } else {
             alert(res.data.USER_NAME + '님 환영합니다.')
@@ -30,7 +31,7 @@ const checkId = () => {
             router.push('/')
           }
         } else {
-          console.log('값이 오지 않음(계정 없음)' + res.data)
+          console.log('값이 오지 않음(계정 없음)')
           alert('비활성화된 계정입니다. 관리자에게 문의 바랍니다.')
         }
       })

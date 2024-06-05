@@ -1,6 +1,6 @@
 <script setup>
 import axios from 'axios'
-import { onMounted, ref } from 'vue'
+import { onMounted, ref, watch } from 'vue'
 import Cookies from 'js-cookie'
 import { useRouter } from 'vue-router'
 import BoardHeader from '../board/BoardHeader.vue'
@@ -8,6 +8,10 @@ import PostTags from './PostTags.vue'
 
 const router = useRouter()
 const currUrl = ref('')
+
+const isTags = ref(false)
+const inputTag = ref('')
+const postTags = ref([])
 
 const boardId = ref('')
 const postTitle = ref('')
@@ -26,7 +30,8 @@ function submitPost() {
       userId: userId.value,
       boardId: boardId.value,
       postTitle: postTitle.value,
-      postContent: postContent.value
+      postContent: postContent.value,
+      postTags: postTags.value
     }
 
     if (boardId.value != null) {
@@ -48,6 +53,32 @@ function submitPost() {
     alert('내용을 입력하세요.')
   }
 }
+
+watch(inputTag, async (newTag) => {
+  if (newTag.indexOf(',') > -1) {
+    isTags.value = true
+    try {
+      const parts = newTag.split(',')
+      for (let i = 0; i < parts.length; i++) {
+        const tag = parts[i].trim()
+        if (postTags.value.length < 5) {
+          if (tag !== '') {
+            if (!postTags.value.includes(tag)) {
+              postTags.value.push(tag)
+            }
+          }
+        }
+      }
+      inputTag.value = ''
+    } catch (error) {
+      console.log('오류오류')
+    }
+  }
+})
+
+function deleteTag(index) {
+  postTags.value.splice(index, 1)
+}
 </script>
 
 <template>
@@ -61,23 +92,54 @@ function submitPost() {
     >
   </header>
   <article class="write_wrap">
-    <div class="posts">
+    <input :value="userId" type="text" readonly /><br />
+    <input
+      v-model="postTitle"
+      class="title"
+      type="text"
+      placeholder="제목을 입력해 주세요."
+    /><br />
+    <input
+      v-model="postContent"
+      style="width: 300px; height: 300px"
+      class="content"
+      type="text"
+    /><br /><br />
+    <p style="display: inline">태그</p>
+    &nbsp;
+    <p style="font-size: small; display: inline">구분은 쉼표입니다.</p>
+    <div class="tags">
       <form>
-        <input :value="userId" type="text" readonly /><br />
-        <input
-          v-model="postTitle"
-          class="title"
-          type="text"
-          placeholder="제목을 입력해 주세요."
-        /><br />
-        <input
-          v-model="postContent"
-          style="width: 300px; height: 300px"
-          class="content"
-          type="text"
-        />
-        <post-tags></post-tags>
-        <button @click="submitPost()" type="button">등록</button> 
+        <div v-if="isTags">
+          <ul style="list-style-type: none; display: flex">
+            <li
+              v-for="(tag, index) in postTags"
+              :key="index"
+              style="margin-right: 10px; margin-left: 0px"
+            >
+              <div
+                style="
+                  background-color: white;
+                  box-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
+                  border-radius: 8px;
+                  padding: 1px;
+                "
+              >
+                {{ tag }}
+                <button
+                  @click="deleteTag(index)"
+                  type="button"
+                  style="border: none; background: none"
+                >
+                  X
+                </button>
+              </div>
+            </li>
+          </ul>
+        </div>
+        <input v-model="inputTag" class="title" type="text" placeholder="태그를 입력라세요" />
+
+        <button @click="submitPost()" type="button">등록</button>
       </form>
     </div>
   </article>
