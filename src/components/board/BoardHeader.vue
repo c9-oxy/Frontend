@@ -37,7 +37,7 @@ onMounted(() => {
 
 <template>
   <div>
-    <h2>{{ boardName }}</h2>
+    <h2>{{ boardName }}게시판</h2>
   </div>
 </template>
 

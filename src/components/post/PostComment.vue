@@ -115,6 +115,7 @@ function submitReply() {
       <div v-if="isComment">
         <tr v-for="comment in commentList" :key="comment.COMM_NO">
           <div v-if="comment.COMM_CLASS == 0">
+            <!-- 일반 댓글 표시 -->
             <td style="font-weight: 500">{{ comment.USER_NAME }}</td>
             <td>{{ comment.COMM_CONTENT }}</td>
             <td>{{ comment.COMM_TIME }}</td>
@@ -127,11 +128,14 @@ function submitReply() {
           </div>
 
           <div v-if="comment.COMM_CLASS == 1" style="position: relative; left: 30px">
+            <!-- 답글 표시 -->
             <td>{{ comment.USER_NAME }}</td>
             <td>{{ comment.COMM_CONTENT }}</td>
             <td>{{ comment.COMM_TIME }}</td>
+            <td>{{ comment.COMM_GROUP }}</td>
           </div>
           <div v-if="isReply && comment.COMM_NO == replyNo">
+            <!-- 답글 등록 버튼 -->
             <form action="">
               <input :value="userId" type="text" readonly /><br />
               <input v-model="replyContent" type="text" />

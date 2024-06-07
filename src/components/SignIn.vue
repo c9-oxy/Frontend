@@ -20,7 +20,7 @@ const checkId = () => {
       .post('http://localhost:8082/signin', signInUser)
       .then((res) => {
         if (res.data) {
-          if (res.data.USER_COUNT > 0) {
+          if (res.data.USER_FAILED > 0) {
             //USER_FAILED로 변경
             alert('비밀번호를 잘못 입력했습니다.\n입력하신 내용을 다시 확인해주세요.')
           } else {

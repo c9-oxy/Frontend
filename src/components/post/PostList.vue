@@ -59,8 +59,7 @@ function routeWrite(boardId) {
   <header>
     <router-link :to="{ name: 'postList', params: { id: boardId.value } }"
       ><board-header msg> </board-header>
-      <h2>게시판</h2></router-link
-    >
+    </router-link>
   </header>
   <div class="posts">
     <h4>전체 글 보기</h4>

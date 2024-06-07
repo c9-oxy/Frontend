@@ -20,7 +20,9 @@ const postAuthor = ref('')
 const postTime = ref('')
 const postEDITTIME = ref('')
 const postEDITS = ref('')
- 
+const postTags = ref([])
+const tagNames = ref([])
+
 onMounted(() => {
   currUrl.value = window.location.href //먼저 자신의 현재 url을 가져옵니다.
   const parts = currUrl.value.split('/')
@@ -32,19 +34,25 @@ onMounted(() => {
       .get(`http://localhost:8082/posts/${boardId.value}/${postNo.value}`) //id 파라미터를 매개로 post들을 검색한다.
       .then((res) => {
         if (Object.keys(res.data).length === 0) {
+          //글이 존재하지 않을 시
           console.log(res.data)
           isPost.value = false
           alert('글이 존재하지 않습니다.')
-          //   router.push('/board')
+          router.push({ name: 'postList', params: { id: boardId.value } })
         } else {
-          isPost.value = true
-          postTitle.value = res.data.POST_TITLE
+          //글이 존재할 시
+          isPost.value = true //포스트 보이게 처리 후,
+          postTitle.value = res.data.POST_TITLE //전송받은 데이터들 전부 적용
           postContent.value = res.data.POST_CONTENT
           postAuthor.value = res.data.POST_AUTHOR
           postTime.value = res.data.POST_TIME
-          // postCommentsCount.value = res.data.TOTAL
           postEDITTIME.value = res.data.POST_EDIT_TIME
           postEDITS.value = res.data.POST_EDITS
+          postTags.value = res.data.POST_TAG
+
+          postTags.value.forEach((item) => {
+            tagNames.value.push(item.TAG_NAME)
+          })
         }
       })
       .catch((err) => {
@@ -71,7 +79,7 @@ const deletePost = () => {
     })
 }
 
-const clickupdatepush = () => {   
+const clickupdatepush = () => {
   router.push({ name: 'postUpdate', params: { no: postNo.value } })
 }
 </script>
@@ -123,6 +131,29 @@ const clickupdatepush = () => {
         <br />
         <div class="content">
           {{ postContent }}
+        </div>
+        <div class="tag">
+          <ul style="list-style-type: none; display: flex">
+            <li
+              v-for="(tag, index) in tagNames"
+              :key="index"
+              style="margin-right: 10px; margin-left: 0px"
+            >
+              <router-link
+                :to="{ name: 'postTags', params: { tag: tag } }"
+                style="
+                  min-width: 50px;
+                  background-color: rgb(230, 230, 230);
+                  border-radius: 4px;
+                  padding-left: 8px;
+                  color: rgb(0, 0, 0);
+                  display: inline-block;
+                "
+              >
+                #{{ tag }}
+              </router-link>
+            </li>
+          </ul>
         </div>
         <br /><br />
         <hr />

@@ -72,6 +72,11 @@ const router = createRouter({
       path: '/posts/:no/edit',
       name: 'postUpdate',
       component: () => import('../views/PostUpdateView.vue')
+    },
+    {
+      path: '/posts/tags/:tag',
+      name: 'postTags',
+      component: () => import('../views/PostTagsView.vue')
     }
   ]
 })

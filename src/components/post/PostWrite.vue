@@ -137,7 +137,13 @@ function deleteTag(index) {
             </li>
           </ul>
         </div>
-        <input v-model="inputTag" class="title" type="text" placeholder="태그를 입력라세요" />
+        <input
+          v-model="inputTag"
+          class="title"
+          type="text"
+          maxlength="10"
+          placeholder="태그는 20자까지 5개만 허용됩니다."
+        />
 
         <button @click="submitPost()" type="button">등록</button>
       </form>
