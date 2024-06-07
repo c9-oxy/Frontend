@@ -36,9 +36,7 @@ onMounted(() => {
 </script>
 
 <template>
-  <div>
-    <h2>{{ boardName }}게시판</h2>
-  </div>
+  <h2>{{ boardName }} 게시판</h2>
 </template>
 
 <style scoped>

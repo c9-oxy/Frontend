@@ -22,6 +22,7 @@ const postEDITTIME = ref('')
 const postEDITS = ref('')
 const postTags = ref([])
 const tagNames = ref([])
+const isTag = ref(false)
 
 onMounted(() => {
   currUrl.value = window.location.href //먼저 자신의 현재 url을 가져옵니다.
@@ -48,11 +49,13 @@ onMounted(() => {
           postTime.value = res.data.POST_TIME
           postEDITTIME.value = res.data.POST_EDIT_TIME
           postEDITS.value = res.data.POST_EDITS
-          postTags.value = res.data.POST_TAG
-
-          postTags.value.forEach((item) => {
-            tagNames.value.push(item.TAG_NAME)
-          })
+          if (res.data.POST_TAG) {
+            isTag.value = true
+            postTags.value = res.data.POST_TAG
+            postTags.value.forEach((item) => {
+              tagNames.value.push(item.TAG_NAME)
+            })
+          }
         }
       })
       .catch((err) => {
@@ -96,9 +99,8 @@ const clickupdatepush = () => {
   </div>
   <header>
     <router-link :to="{ name: 'postList', params: { id: boardId.value } }"
-      ><board-header msg> </board-header>
-      <h2>게시판</h2></router-link
-    >
+      ><board-header msg> </board-header
+    ></router-link>
   </header>
   <div class="posts">
     <span v-if="!isPost">글이 없습니다.</span>
@@ -132,7 +134,7 @@ const clickupdatepush = () => {
         <div class="content">
           {{ postContent }}
         </div>
-        <div class="tag">
+        <div v-if="isTag" class="tag">
           <ul style="list-style-type: none; display: flex">
             <li
               v-for="(tag, index) in tagNames"
